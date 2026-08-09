@@ -41,8 +41,17 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
+      - name: Debug Terraform files
+  run: |
+    echo "Current directory:"
+    pwd
+    echo "Files:"
+    ls -la
+    echo "Terraform files:"
+    find . -maxdepth 2 -type f -print
+
       - name: Terraform Plan
-        run: terraform plan -input=false -var-file="terraform.tfvars"
+  run: terraform plan -input=false -var-file="./terraform.tfvars"
 
       - name: Terraform Security Scan
         uses: aquasecurity/tfsec-action@v1.0.3
