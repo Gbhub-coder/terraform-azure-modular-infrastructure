@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - "feature/**"
-
   pull_request:
     branches:
       - main
@@ -19,7 +18,7 @@ jobs:
 
     defaults:
       run:
-        working-directory: ./Enviroment/prod
+        working-directory: Enviroment/prod
 
     steps:
       - name: Checkout
@@ -28,11 +27,16 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Terraform Format Check
-        run: terraform fmt -check -recursive
+      - name: Check Terraform files
+        run: |
+          pwd
+          ls -la
 
       - name: Terraform Init
         run: terraform init -input=false
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
 
       - name: Terraform Validate
         run: terraform validate
