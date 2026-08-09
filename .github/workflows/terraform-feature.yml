@@ -30,6 +30,7 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+         working-directory: ./Enviroment/prod
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
@@ -38,7 +39,8 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -input=false
+        run: terraform plan -input=false -var-file="terraform.tfvars"
+        working-directory: ./Enviroment/prod
 
       - name: Terraform Security Scan
         uses: aquasecurity/tfsec-action@v1.0.3
