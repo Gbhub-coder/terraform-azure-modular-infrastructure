@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - "feature/**"
+
   pull_request:
     branches:
       - main
@@ -31,6 +32,13 @@ jobs:
         run: |
           pwd
           ls -la
+          echo "Checking tfvars..."
+          if [ -f terraform.tfvars ]; then
+            echo "TFVARS FOUND"
+          else
+            echo "TFVARS NOT FOUND"
+            exit 1
+          fi
 
       - name: Terraform Init
         run: terraform init -input=false
@@ -41,25 +49,8 @@ jobs:
       - name: Terraform Validate
         run: terraform validate
 
-      - name: Debug Terraform files
-  run: |
-    echo "Current directory:"
-    pwd
-    echo "Files:"
-    ls -la
-    echo "Terraform files:"
-    find . -maxdepth 2 -type f -print
-    
-    - name: Check tfvars
-  run: |
-    pwd
-    ls -la
-    ls -la Enviroment/prod
-    test -f Enviroment/prod/terraform.tfvars && echo "TFVARS FOUND" || echo "TFVARS NOT FOUND"
-
       - name: Terraform Plan
-  working-directory: ./Enviroment/prod
-  run: terraform plan -input=false -var-file="./terraform.tfvars"
+        run: terraform plan -input=false -var-file="./terraform.tfvars"
 
       - name: Terraform Security Scan
         uses: aquasecurity/tfsec-action@v1.0.3
