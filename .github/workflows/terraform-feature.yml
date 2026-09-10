@@ -1,0 +1,54 @@
+name: Terraform Feature CI
+
+on:
+  push:
+    branches:
+      - "feature/**"
+
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  terraform:
+    name: Terraform Init Plan Scan
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: Enviroment/prod
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Azure Login
+        uses: azure/login@v3
+        with:
+          client-id: 687845ec-edff-4d1e-a3a6-ab2e710f1852
+          tenant-id: 22ae95d3-de6d-4276-933b-260062b9642f
+          subscription-id: b873185e-57d1-44e1-b0b2-202d2c633e17
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        run: terraform init -input=false
+
+      - name: Terraform Format Check
+        run: terraform fmt -check -recursive
+
+      - name: Terraform Validate
+        run: terraform validate
+
+      - name: Terraform Plan
+        run: terraform plan -input=false -var-file="./terraform.tfvars"
+
+      - name: Terraform Security Scan
+        uses: aquasecurity/tfsec-action@v1.0.3
+        with:
+          working_directory: Enviroment/prod

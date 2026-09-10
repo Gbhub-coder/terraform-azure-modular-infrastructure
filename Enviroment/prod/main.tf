@@ -19,6 +19,7 @@ module "vms" {
   depends_on = [module.rgs, module.snet, module.keyvault]
   source     = "../../Module/azurerm_virtual_machine"
   vm         = var.vms
+  kv         = var.kvs
   kv           = var.kvs
 }
 
@@ -27,4 +28,5 @@ module "keyvault" {
   source       = "../../Module/azurerm_keyvault"
   kv           = var.kvs
   vm_passwords = var.vm_passwords
+}
 }
