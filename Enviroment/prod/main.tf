@@ -20,6 +20,7 @@ module "vms" {
   source     = "../../Module/azurerm_virtual_machine"
   vm         = var.vms
   kv         = var.kvs
+  kv           = var.kvs
 }
 
 module "keyvault" {
@@ -27,4 +28,5 @@ module "keyvault" {
   source       = "../../Module/azurerm_keyvault"
   kv           = var.kvs
   vm_passwords = var.vm_passwords
+}
 }
